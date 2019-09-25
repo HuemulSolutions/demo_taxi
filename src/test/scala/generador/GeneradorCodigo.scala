@@ -2,7 +2,7 @@ package generador
 
 import org.junit._
 import Assert._
-import com.yourcompany.yourapplication.datalake._
+import com.yourcompany.demo_taxi.datalake._
 import com.huemulsolutions.bigdata.common._
 import com.huemulsolutions.bigdata.control._
 import com.huemulsolutions.bigdata.tables.huemulType_Tables
@@ -19,11 +19,11 @@ class AppTest {
     def testOK() = assertTrue(GeneraCod)
 
     def GeneraCod(): Boolean = {            
-      var row_class = new raw_entidad_mes(huemulBigDataGov,Control)
+      var row_class = new yellow_tripdata_mes(huemulBigDataGov,Control)
       row_class.GenerateInitialCode("com.yourcompany" //PackageBase
-                                  , "yourapplication"//PackageProject
-                                  , "process_entidad_mes"//NewObjectName
-                                  , "tbl_yourapplication_entidad_mes"//NewTableName
+                                  , "demo_taxi"//PackageProject
+                                  , "process_taxi_mes"//NewObjectName
+                                  , "tbl_demo_taxi_mes"//NewTableName
                                   
                                   , huemulType_Tables.Transaction //TableType
                                   ,  huemulType_Frequency.MONTHLY //EsMes
