@@ -31,6 +31,9 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   //Indica la cantidad de particiones al guardar un archivo, para archivos pequeños (menor al bloque de HDFS) se 
   //recomienda el valor 1, mientras mayor la tabla la cantidad de particiones debe ser mayor para aprovechar el paralelismo
   //this.setNumPartitions(1)
+  //setSaveDQErrorOnce: true (default). Guarda todos los detalles de error o warning de DQ en disco una sola vez (ejemplo: falla regla 1 y regla 2, escribe en disco una sola vez --> usar cuando hay suficiente memoria RAM para el proceso, ya que consolida todos los DF en uno solo)
+  //                    false. Guarda en disco cada resultado de error o warning en forma independiente (ej: falla regla 1 y regla 2, escribe en disco 2 veces -- usar cuando hay poca mejora RAM para ejecutar el proceso) 
+  this.setSaveDQErrorOnce(true)
   
   /**********   C O N T R O L   D E   C A M B I O S   Y   B A C K U P   ****************************************/
   //Permite guardar los errores y warnings en la aplicación de reglas de DQ, valor por default es true
@@ -92,7 +95,9 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   //passenger_count.setDQ_MinDecimalValue(Decimal.apply(0))  
   //passenger_count.setDQ_MaxDecimalValue(Decimal.apply(200.34))  
 
-  val trip_distance = new huemul_Columns (DecimalType(6,4), true, "trip_distance") 
+  val trip_distance = new huemul_Columns (DecimalType(6,4), true, "trip_distance")
+  trip_distance.setIsPK(true)
+  trip_distance.setNullable(true)
   trip_distance.setARCO_Data(false)  
   trip_distance.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
@@ -102,25 +107,29 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   //RatecodeID.setDQ_MinDecimalValue(Decimal.apply(0))  
   //RatecodeID.setDQ_MaxDecimalValue(Decimal.apply(200.34))  
 
-  val store_and_fwd_flag = new huemul_Columns (StringType, true, "store_and_fwd_flag") 
+  val store_and_fwd_flag = new huemul_Columns (StringType, true, "store_and_fwd_flag")
+  store_and_fwd_flag.setIsPK(true)
   store_and_fwd_flag.setARCO_Data(false)  
   store_and_fwd_flag.setSecurityLevel(huemulType_SecurityLevel.Public)  
   //store_and_fwd_flag.setDQ_MinLen(5) 
   //store_and_fwd_flag.setDQ_MaxLen(100)  
 
   val PULocationID = new huemul_Columns (IntegerType, true, "PULocationID") 
+  PULocationID.setIsPK(true)
   PULocationID.setARCO_Data(false)  
   PULocationID.setSecurityLevel(huemulType_SecurityLevel.Public)  
   //PULocationID.setDQ_MinDecimalValue(Decimal.apply(0))  
   //PULocationID.setDQ_MaxDecimalValue(Decimal.apply(200.34))  
 
-  val DOLocationID = new huemul_Columns (IntegerType, true, "DOLocationID") 
+  val DOLocationID = new huemul_Columns (IntegerType, true, "DOLocationID")
+  DOLocationID.setIsPK(true)
   DOLocationID.setARCO_Data(false)  
   DOLocationID.setSecurityLevel(huemulType_SecurityLevel.Public)  
   //DOLocationID.setDQ_MinDecimalValue(Decimal.apply(0))  
   //DOLocationID.setDQ_MaxDecimalValue(Decimal.apply(200.34))  
 
-  val payment_type = new huemul_Columns (IntegerType, true, "payment_type") 
+  val payment_type = new huemul_Columns (IntegerType, true, "payment_type")
+  payment_type.setIsPK(true)
   payment_type.setARCO_Data(false)  
   payment_type.setSecurityLevel(huemulType_SecurityLevel.Public)  
   //payment_type.setDQ_MinDecimalValue(Decimal.apply(0))  
@@ -133,18 +142,21 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   //fare_amount.setDQ_MaxDecimalValue(Decimal.apply(200.34))  
 
   val extra = new huemul_Columns (DecimalType(6,4), true, "extra") 
-  extra.setARCO_Data(false)  
+  extra.setARCO_Data(false)
+  extra.setNullable(true)
   extra.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
   val mta_tax = new huemul_Columns (DecimalType(6,4), true, "mta_tax") 
   mta_tax.setARCO_Data(false)  
   mta_tax.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
-  val tip_amount = new huemul_Columns (DecimalType(6,4), true, "tip_amount") 
+  val tip_amount = new huemul_Columns (DecimalType(6,4), true, "tip_amount")
+  tip_amount.setNullable(true)
   tip_amount.setARCO_Data(false)  
   tip_amount.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
-  val tolls_amount = new huemul_Columns (DecimalType(6,4), true, "tolls_amount") 
+  val tolls_amount = new huemul_Columns (DecimalType(6,4), true, "tolls_amount")
+  tolls_amount.setNullable(true)
   tolls_amount.setARCO_Data(false)  
   tolls_amount.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
@@ -152,7 +164,9 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   improvement_surcharge.setARCO_Data(false)  
   improvement_surcharge.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
-  val total_amount = new huemul_Columns (DecimalType(6,4), true, "total_amount") 
+  val total_amount = new huemul_Columns (DecimalType(6,4), true, "total_amount")
+  total_amount.setIsPK(true)
+  total_amount.setNullable(true)
   total_amount.setARCO_Data(false)  
   total_amount.setSecurityLevel(huemulType_SecurityLevel.Public)  
 
@@ -204,7 +218,7 @@ class tbl_demo_taxi_mes(huemulBigDataGov: huemul_BigDataGovernance, Control: hue
   //********************  Notification es opcional, por default es "error", y ante la aparicion del error el programa falla, si lo cambias a "warning" y la validacion falla, el programa sigue y solo sera notificado
   //********************  SaveErrorDetails es opcional, por default es "true", permite almacenar el detalle del error o warning en una tabla específica, debe estar habilitada la opción DQ_SaveErrorDetails en GlobalSettings
   //********************  DQ_ExternalCode es opcional, por default es "null", permite asociar un Id externo de DQ
-  //val DQ_NombreRegla: huemul_DataQuality = new huemul_DataQuality(ColumnXX,"Descripcion de la validacion", "Campo_1 > Campo_2",1)
+  val DQ_total_amount_notnull: huemul_DataQuality = new huemul_DataQuality(total_amount,"total_amount not null", "total_amount is not null",1,huemulType_DQQueryLevel.Row, huemulType_DQNotification.WARNING, true, "EX-CODE-01")
   //**************Adicionalmeente, puedes agregar "tolerancia" a la validacion, es decir, puedes especiicar 
   //************** numFilas = 10 para permitir 10 errores (al 11 se cae)
   //************** porcentaje = 0.2 para permitir una tolerancia del 20% de errores
