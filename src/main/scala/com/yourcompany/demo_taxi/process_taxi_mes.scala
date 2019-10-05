@@ -7,6 +7,7 @@ import org.apache.spark.sql.types._
 import com.yourcompany.tables.master._
 import com.yourcompany.demo_taxi.datalake._
 import com.yourcompany.settings.globalSettings
+import org.apache.spark.storage.StorageLevel
 
 //import com.huemulsolutions.bigdata.tables._
 //import com.huemulsolutions.bigdata.dataquality._
@@ -76,6 +77,8 @@ object process_taxi_mes {
       if (!DF_RAW.open("DF_RAW", Control, param_year, param_month, 1, 0, 0, 0))       
         Control.RaiseError(s"error encontrado, abortar: ${DF_RAW.Error.ControlError_Message}")
       
+      Control.NewStep("Guardando datos en bruto en sandbox")
+      DF_RAW.DataFramehuemul.savePersistToDisk(true, s"taxi_yellow_${param_year}_${param_month}", "taxi") //, globalPath, databaseName)
       
       /*********************************************************/
       /*************** LOGICAS DE NEGOCIO **********************/
@@ -90,7 +93,7 @@ object process_taxi_mes {
                                      ,tpep_pickup_datetime
                                      ,tpep_dropoff_datetime
                                      ,passenger_count
-                                     ,trip_distance
+                                     ,cast(case when trip_distance is null or trip_distance = '' then 0 else trip_distance end as Decimal(6,4)) as trip_distance
                                      ,RatecodeID
                                      ,store_and_fwd_flag
                                      ,PULocationID
@@ -102,7 +105,7 @@ object process_taxi_mes {
                                      ,tip_amount
                                      ,tolls_amount
                                      ,improvement_surcharge
-                                     ,total_amount
+                                     ,cast(case when total_amount is null or total_amount  = '' then 0 else total_amount end as Decimal(6,4)) as total_amount
                                      ,congestion_surcharge
 
                                FROM DF_RAW""")
@@ -142,7 +145,7 @@ object process_taxi_mes {
 
       Control.NewStep("Ejecuta Proceso")    
       if (!huemulTable.executeFull("FinalSaved"))
-        Control.RaiseError(s"User: Error al intentar masterizar instituciones (${huemulTable.Error_Code}): ${huemulTable.Error_Text}")
+        Control.RaiseError(s"User: Error al intentar masterizar taxis yellow ny (${huemulTable.Error_Code}): ${huemulTable.Error_Text}")
       
       Control.FinishProcessOK
     } catch {
