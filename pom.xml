@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yourcompany</groupId>
   <artifactId>demo_taxi</artifactId>
-  <version>2.0</version>
+  <version>2.3</version>
   <name>demo_taxi</name>
   <description>Proyecto demo para ingestar datos de taxis de NY</description>
   <inceptionYear>2018</inceptionYear>
@@ -28,13 +28,13 @@
   	<dependency>
     	<groupId>com.huemulsolutions.bigdata</groupId>
     	<artifactId>huemul-bigdatagovernance</artifactId>
-    	<version>2.1</version>
+    	<version>2.3</version>
     </dependency>
     
     <dependency>
     	<groupId>com.yourcompany</groupId>
     	<artifactId>demo_settings</artifactId>
-    	<version>2.0</version>
+    	<version>2.3</version>
     </dependency>
     
     <dependency>

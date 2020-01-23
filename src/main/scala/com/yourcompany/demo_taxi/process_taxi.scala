@@ -8,19 +8,19 @@ import com.yourcompany.tables.master._
 import com.yourcompany.demo_taxi.datalake._
 import com.yourcompany.settings.globalSettings
 import org.apache.spark.storage.StorageLevel
-
+import com.huemulsolutions.bigdata.tables.huemul_TableConnector
 //import com.huemulsolutions.bigdata.tables._
 //import com.huemulsolutions.bigdata.dataquality._
 
 
-object process_taxi_mes {
+object process_taxi {
   
   /**
    * Este codigo se ejecuta cuando se llama el JAR desde spark2-submit. el codigo esta preparado para hacer reprocesamiento masivo.
   */
   def main(args : Array[String]) {
     //Creacion API
-    val huemulBigDataGov  = new huemul_BigDataGovernance(s"Masterizacion tabla tbl_demo_taxi_mes - ${this.getClass.getSimpleName}", args, globalSettings.Global)
+    val huemulBigDataGov  = new huemul_BigDataGovernance(s"Masterizacion tabla tbl_demo_taxi - ${this.getClass.getSimpleName}", args, globalSettings.Global)
     
     /*************** PARAMETROS **********************/
     var param_year = huemulBigDataGov.arguments.GetValue("year", null, "Debe especificar el parametro año, ej: year=2017").toInt
@@ -69,8 +69,6 @@ object process_taxi_mes {
       Control.AddParamYear("param_year", param_year)
       Control.AddParamMonth("param_month", param_month)
       
-      //Control.AddParamInformation("param_oters", param_otherparams)
-      
       /*************** ABRE RAW DESDE DATALAKE **********************/
       Control.NewStep("Abre DataLake")  
       var DF_RAW =  new yellow_tripdata_mes(huemulBigDataGov, Control)
@@ -84,7 +82,7 @@ object process_taxi_mes {
       /*************** LOGICAS DE NEGOCIO **********************/
       /*********************************************************/
       //instancia de clase tbl_demo_taxi_mes 
-      val huemulTable = new tbl_demo_taxi_mes(huemulBigDataGov, Control)
+      val huemulTable = new tbl_demo_taxi(huemulBigDataGov, Control)
       
       Control.NewStep("Generar Logica de Negocio")
       huemulTable.DF_from_SQL("FinalRAW"
@@ -109,10 +107,9 @@ object process_taxi_mes {
                                      ,congestion_surcharge
                                      ,concat(VendorID,'-',row_number() over(partition by VendorID order by 1)) as UniqueKey 
 
-                               FROM DF_RAW""")
+                               FROM DF_RAW """)
       
                                huemulTable.DataFramehuemul.DataFrame.show()
-      DF_RAW.DataFramehuemul.DataFrame.unpersist()
       
       
       Control.NewStep("Asocia columnas de la tabla con nombres de campos de SQL")

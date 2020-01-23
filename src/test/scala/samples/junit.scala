@@ -25,7 +25,7 @@ class AppTest {
       var SinError = true
       
       try {
-        val Master = new tbl_yourapplication_entidad_mes(huemulBigDataGov,Control)
+        val Master = new tbl_demo_taxi_mes (huemulBigDataGov,Control)
         if (Master.Error_isError) {
           println(s"Codigo: ${Master.Error_Code}, Descripción: ${Master.Error_Text}")
           SinError = false
