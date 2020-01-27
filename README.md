@@ -1,2 +1,4 @@
-# BigDataGovernance_2.0_TemplateBase
-Proyecto base para ser utilizado en cualquier proyecto BigData
+# Taxi NY
+Este proyecto permite cargar la información de taxis de NY utilizando Huemul BigData Governance.
+
+
